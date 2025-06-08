@@ -2,6 +2,11 @@
 let todos = [];
 let todoIdCounter = 1;
 
+/**
+ * 新しいタスクを入力欄から追加します。
+ *
+ * 入力が空の場合は警告を表示し、追加を中止します。追加後は入力欄をクリアし、タスクリストを再描画します。
+ */
 function addTodo() {
     const input = document.getElementById('todoInput');
     const text = input.value.trim();
@@ -23,6 +28,11 @@ function addTodo() {
     renderTodos();
 }
 
+/**
+ * 指定したIDのToDo項目の完了状態を切り替え、リストを再描画します。
+ *
+ * @param {number} id - 完了状態を切り替えるToDo項目のID。
+ */
 function toggleTodo(id) {
     const todo = todos.find(t => t.id === id);
     if (todo) {
@@ -31,12 +41,23 @@ function toggleTodo(id) {
     }
 }
 
+/**
+ * 指定されたIDのToDoをリストから削除し、表示を更新します。
+ *
+ * @param {number} id - 削除するToDoの一意なID。
+ */
 function deleteTodo(id) {
     todos = todos.filter(t => t.id !== id);
     renderTodos();
 }
 
-// script.js に追加
+/**
+ * 指定したIDのToDo項目をインラインで編集できるようにする。
+ *
+ * 対象のToDoテキストを入力フィールドに置き換え、編集後にEnterキーまたはフォーカスが外れた際に保存し、Escapeキーで編集をキャンセルします。
+ *
+ * @param {number} id - 編集対象のToDo項目のID。
+ */
 function editTodo(id) {
     const todo = todos.find(t => t.id === id);
     if (!todo) return;
@@ -55,6 +76,11 @@ function editTodo(id) {
     input.focus();
     input.select();
     
+    /**
+     * 編集中のToDoテキストを保存し、リストを再描画します。
+     *
+     * 入力が空の場合は元のテキストに戻し、空でなければ新しいテキストに更新します。
+     */
     function saveEdit() {
         const newText = input.value.trim();
         if (newText === '') {
@@ -66,6 +92,9 @@ function editTodo(id) {
         renderTodos();
     }
     
+    /**
+     * 編集中の操作をキャンセルし、ToDoリストの表示を元の状態に戻します。
+     */
     function cancelEdit() {
         renderTodos(); // 元の状態に戻す
     }
@@ -86,7 +115,11 @@ function editTodo(id) {
     input.addEventListener('blur', saveEdit);
 }
 
-// renderTodos関数を更新
+/**
+ * 現在のToDoリストをDOMに描画し、各タスクの状態や操作ボタンを反映します。
+ *
+ * ToDoの完了状態や編集・削除・切り替え操作に応じて、リスト表示を最新の状態に更新します。
+ */
 function renderTodos() {
     const todoList = document.getElementById('todoList');
     todoList.innerHTML = '';
