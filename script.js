@@ -23,28 +23,6 @@ function addTodo() {
     renderTodos();
 }
 
-function renderTodos() {
-    const todoList = document.getElementById('todoList');
-    todoList.innerHTML = '';
-    
-    todos.forEach(todo => {
-        const li = document.createElement('li');
-        li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-        
-        li.innerHTML = `
-            <span>${todo.text}</span>
-            <div class="todo-actions">
-                <button class="complete-btn" onclick="toggleTodo(${todo.id})">
-                    ${todo.completed ? '戻す' : '完了'}
-                </button>
-                <button class="delete-btn" onclick="deleteTodo(${todo.id})">削除</button>
-            </div>
-        `;
-        
-        todoList.appendChild(li);
-    });
-}
-
 function toggleTodo(id) {
     const todo = todos.find(t => t.id === id);
     if (todo) {
