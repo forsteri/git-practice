@@ -2,6 +2,39 @@
 let todos = [];
 let todoIdCounter = 1;
 
+// ローカルストレージキー
+const STORAGE_KEY = 'simple-todo-app-data';
+
+// データの読み込み
+function loadTodos() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            const data = JSON.parse(saved);
+            todos = data.todos || [];
+            todoIdCounter = data.nextId || 1;
+        }
+    } catch (error) {
+        console.warn('Failed to load todos from localStorage:', error);
+        todos = [];
+        todoIdCounter = 1;
+    }
+}
+
+// データの保存
+function saveTodos() {
+    try {
+        const data = {
+            todos: todos,
+            nextId: todoIdCounter,
+            lastUpdated: new Date().toISOString()
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (error) {
+        console.warn('Failed to save todos to localStorage:', error);
+    }
+}
+
 function addTodo() {
     const input = document.getElementById('todoInput');
     const text = input.value.trim();
@@ -20,6 +53,7 @@ function addTodo() {
     
     todos.push(todo);
     input.value = '';
+    saveTodos(); // 保存追加
     renderTodos();
 }
 
@@ -27,12 +61,14 @@ function toggleTodo(id) {
     const todo = todos.find(t => t.id === id);
     if (todo) {
         todo.completed = !todo.completed;
+        saveTodos(); // 保存追加
         renderTodos();
     }
 }
 
 function deleteTodo(id) {
     todos = todos.filter(t => t.id !== id);
+    saveTodos(); // 保存追加
     renderTodos();
 }
 
@@ -63,6 +99,7 @@ function editTodo(id) {
         } else {
             todo.text = newText;
         }
+        saveTodos(); // 保存追加
         renderTodos();
     }
     
@@ -115,4 +152,10 @@ document.getElementById('todoInput').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         addTodo();
     }
+});
+
+// 初期化時にデータを読み込み
+document.addEventListener('DOMContentLoaded', () => {
+    loadTodos();
+    renderTodos();
 });
