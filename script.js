@@ -110,6 +110,39 @@ function renderTodos() {
     });
 }
 
+// script.js に追加
+let currentFilter = 'all';
+
+function filterTodos(filter) {
+    currentFilter = filter;
+    
+    // ボタンのアクティブ状態を更新
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    renderTodos();
+}
+
+// renderTodos を更新
+function renderTodos() {
+    const todoList = document.getElementById('todoList');
+    todoList.innerHTML = '';
+    
+    // フィルタリング
+    let filteredTodos = todos;
+    if (currentFilter === 'active') {
+        filteredTodos = todos.filter(todo => !todo.completed);
+    } else if (currentFilter === 'completed') {
+        filteredTodos = todos.filter(todo => todo.completed);
+    }
+    
+    filteredTodos.forEach(todo => {
+        // ... 既存のレンダリングコード ...
+    });
+}
+
 // Enterキーでタスク追加
 document.getElementById('todoInput').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
