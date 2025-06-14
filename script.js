@@ -115,15 +115,16 @@ let currentFilter = 'all';
 
 function filterTodos(filter, event) {
     currentFilter = filter;
-    
+
     // ボタンのアクティブ状態を更新
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    event.target.classList.add('active');
-    // …残りの処理…
-}
-    
+    // 防御的チェック
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+
     renderTodos();
 }
 
@@ -140,9 +141,23 @@ function renderTodos() {
         filteredTodos = todos.filter(todo => todo.completed);
     }
     
-    filteredTodos.forEach(todo => {
-        // ... 既存のレンダリングコード ...
-    });
+filteredTodos.forEach(todo => {
+    const li = document.createElement('li');
+    li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+    li.setAttribute('data-id', todo.id);
+    
+    li.innerHTML = `
+        <span class="todo-text" ondblclick="editTodo(${todo.id})">${todo.text}</span>
+        <div class="todo-actions">
+            <button class="complete-btn" onclick="toggleTodo(${todo.id})">
+                ${todo.completed ? '戻す' : '完了'}
+            </button>
+            <button class="delete-btn" onclick="deleteTodo(${todo.id})">削除</button>
+        </div>
+    `;
+    
+    todoList.appendChild(li);
+});
 }
 
 // Enterキーでタスク追加
