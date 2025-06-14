@@ -113,7 +113,7 @@ function renderTodos() {
 // script.js に追加
 let currentFilter = 'all';
 
-function filterTodos(filter) {
+function filterTodos(filter, event) {
     currentFilter = filter;
     
     // ボタンのアクティブ状態を更新
@@ -121,6 +121,8 @@ function filterTodos(filter) {
         btn.classList.remove('active');
     });
     event.target.classList.add('active');
+    // …残りの処理…
+}
     
     renderTodos();
 }
