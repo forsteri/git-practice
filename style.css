@@ -105,3 +105,24 @@ button:hover {
     border-radius: 3px;
     padding: 2px 4px;
 }
+
+/* style.css に追加 */
+.filter-buttons {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.filter-btn {
+    margin: 0 5px;
+    padding: 8px 16px;
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.filter-btn.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}

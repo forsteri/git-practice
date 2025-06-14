@@ -5,19 +5,19 @@ let todoIdCounter = 1;
 function addTodo() {
     const input = document.getElementById('todoInput');
     const text = input.value.trim();
-    
+
     if (text === '') {
         alert('タスクを入力してください！');
         return;
     }
-    
+
     const todo = {
         id: todoIdCounter++,
         text: text,
         completed: false,
         createdAt: new Date()
     };
-    
+
     todos.push(todo);
     input.value = '';
     renderTodos();
@@ -40,21 +40,21 @@ function deleteTodo(id) {
 function editTodo(id) {
     const todo = todos.find(t => t.id === id);
     if (!todo) return;
-    
+
     const todoElement = document.querySelector(`[data-id="${id}"] .todo-text`);
     const originalText = todo.text;
-    
+
     // 編集用のinput要素を作成
     const input = document.createElement('input');
     input.type = 'text';
     input.value = todo.text;
     input.className = 'edit-input';
-    
+
     // 元のテキストを置き換え
     todoElement.replaceWith(input);
     input.focus();
     input.select();
-    
+
     function saveEdit() {
         const newText = input.value.trim();
         if (newText === '') {
@@ -65,53 +65,77 @@ function editTodo(id) {
         }
         renderTodos();
     }
-    
+
     function cancelEdit() {
         renderTodos(); // 元の状態に戻す
     }
-    
+
     // イベントリスナー
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             saveEdit();
         }
     });
-    
+
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             cancelEdit();
         }
     });
-    
+
     input.addEventListener('blur', saveEdit);
 }
 
-// renderTodos関数を更新
+// script.js に追加
+let currentFilter = 'all';
+
+function filterTodos(filter, event = null) {
+    currentFilter = filter;
+
+    // ボタンのアクティブ状態を更新
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    const targetBtn = document.querySelector(`.filter-btn[data-filter="${filter}"]`);
+    if (targetBtn) targetBtn.classList.add('active');
+    renderTodos();
+}
+
+// renderTodos を更新
 function renderTodos() {
     const todoList = document.getElementById('todoList');
+    if (!todoList) return;       // 早期リターン案
     todoList.innerHTML = '';
-    
-    todos.forEach(todo => {
+
+    // フィルタリング
+    let filteredTodos = todos;
+    if (currentFilter === 'active') {
+        filteredTodos = todos.filter(todo => !todo.completed);
+    } else if (currentFilter === 'completed') {
+        filteredTodos = todos.filter(todo => todo.completed);
+    }
+
+    filteredTodos.forEach(todo => {
         const li = document.createElement('li');
         li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
         li.setAttribute('data-id', todo.id);
-        
+
         li.innerHTML = `
-            <span class="todo-text" ondblclick="editTodo(${todo.id})">${todo.text}</span>
-            <div class="todo-actions">
-                <button class="complete-btn" onclick="toggleTodo(${todo.id})">
-                    ${todo.completed ? '戻す' : '完了'}
-                </button>
-                <button class="delete-btn" onclick="deleteTodo(${todo.id})">削除</button>
-            </div>
-        `;
-        
+        <span class="todo-text" ondblclick="editTodo(${todo.id})">${todo.text}</span>
+        <div class="todo-actions">
+            <button class="complete-btn" onclick="toggleTodo(${todo.id})">
+                ${todo.completed ? '戻す' : '完了'}
+            </button>
+            <button class="delete-btn" onclick="deleteTodo(${todo.id})">削除</button>
+        </div>
+    `;
+
         todoList.appendChild(li);
     });
 }
 
 // Enterキーでタスク追加
-document.getElementById('todoInput').addEventListener('keypress', function(e) {
+document.getElementById('todoInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         addTodo();
     }
