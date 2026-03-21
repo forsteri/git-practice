@@ -1,0 +1,48 @@
+site_name: Git Practice
+site_description: Gitを使ったバージョン管理の入門サイト
+
+theme:
+  name: material
+  language: ja
+  font:
+    text: Noto Sans JP
+    code: Noto Sans Mono
+  palette:
+    - scheme: default
+      primary: blue grey
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: ダークモードに切り替え
+    - scheme: slate
+      primary: blue grey
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: ライトモードに切り替え
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - ホーム: index.md
+  - Gitとは: what-is-git.md
+  - 環境構築: setup.md
+  - 基本操作 ローカル編: basic-local.md
+  - 基本操作 リモート編: basic-remote.md
+  - やり直し・取り消し: undo.md
+  - 便利機能・チートシート: tips.md
